@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project4
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: project4
+  template:
+    metadata:
+      labels:
+        app: project4
+    spec:
+      containers:
+        - name: project4
+          image: YOUR_DOCKERHUB_USERNAME/project4:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DJANGO_SECRET_KEY
+              value: "django-secret-key-change-this"
+            - name: DJANGO_DEBUG
+              value: "False"
+            - name: DJANGO_ALLOWED_HOSTS
+              value: "*"
+            - name: MYSQL_DATABASE
+              value: "complaint_db"
+            - name: MYSQL_HOST
+              value: "mysql-service"
+            - name: MYSQL_USER
+              value: "project4user"
+            - name: MYSQL_PASSWORD
+              value: "your-mysql-password"
+            - name: MYSQL_PORT
+              value: "3306"

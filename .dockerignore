@@ -1,0 +1,12 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+venv
+.venv
+project4/db.sqlite3
+project4/__pycache__
+project4/complaint_db.sql
