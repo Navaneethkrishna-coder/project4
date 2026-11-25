@@ -1,4 +1,3 @@
-
 FROM python:3.9-slim
 
 WORKDIR /app
@@ -16,9 +15,9 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY project4/ .
+COPY . .
 
-RUN python manage.py collectstatic --noinput
+RUN DJANGO_SECRET_KEY=build-only-secret python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
