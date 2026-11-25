@@ -1,8 +1,9 @@
+
 pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'YOUR_DOCKERHUB_USERNAME/project4'
+        DOCKER_IMAGE = 'ayanshaji/project4'
     }
 
     stages {
@@ -10,7 +11,7 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/sumith-k-sam/project4.git'
+                    url: 'https://github.com/ayanshaji/project4.git'
             }
         }
 
@@ -39,18 +40,42 @@ pipeline {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'dockerhub-cred',
+                        credentialsId: 'docker-cred',
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )
                 ]) {
                     sh '''
-                        docker login -u "$DOCKER_USER" \
-                        -p "$DOCKER_PASS"
+                        echo "$DOCKER_PASS" | docker login \
+                        -u "$DOCKER_USER" --password-stdin
 
                         docker push ${DOCKER_IMAGE}:${BUILD_NUMBER}
 
                         docker logout
+                    '''
+                }
+            }
+        }
+
+        stage('Git Push') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'github-cred',
+                        usernameVariable: 'GIT_USER',
+                        passwordVariable: 'GIT_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        git config user.name "Jenkins"
+                        git config user.email "jenkins@example.com"
+
+                        git add -A
+
+                        git diff --cached --quiet || \
+                        git commit -m "Updated by Jenkins Build ${BUILD_NUMBER}"
+
+                        git push https://${GIT_USER}:${GIT_TOKEN}@github.com/ayanshaji/project4.git HEAD:main
                     '''
                 }
             }
