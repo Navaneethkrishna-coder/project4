@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: project4
-          image: YOUR_DOCKERHUB_USERNAME/project4:latest
+          image: ayanshaji/project4:latest
           ports:
             - containerPort: 8000
           env:
