@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,12 +15,15 @@ spec:
     spec:
       containers:
         - name: project4
-          image: dockernavaneeth/project4:latest 
+          image: dockernavaneeth/project4:latest
           ports:
             - containerPort: 8000
           env:
             - name: DJANGO_SECRET_KEY
-              value: "django-secret-key-change-this"
+              valueFrom:
+                secretKeyRef:
+                  name: project4-secrets
+                  key: django-secret-key
             - name: DJANGO_DEBUG
               value: "False"
             - name: DJANGO_ALLOWED_HOSTS
@@ -27,10 +31,13 @@ spec:
             - name: MYSQL_DATABASE
               value: "complaint_db"
             - name: MYSQL_HOST
-              value: "mysql-service"
+              value: "project4-mysql-service"
             - name: MYSQL_USER
               value: "project4user"
             - name: MYSQL_PASSWORD
-              value: "your-mysql-password"
+              valueFrom:
+                secretKeyRef:
+                  name: project4-secrets
+                  key: mysql-password
             - name: MYSQL_PORT
               value: "3306"
